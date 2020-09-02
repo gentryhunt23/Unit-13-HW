@@ -5,7 +5,7 @@ exports.connect = async () => {
         port: 8889,
         user: 'root',
         password: 'root',
-        database: 'shopify'
+        database: 'burgers_db'
     });
     return connection;
 }

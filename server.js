@@ -1,16 +1,26 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const routes = require('./routes');
-const connection = require('./connection');
-const app = express();
-const PORT = 9000;
-const run = async (app) => {
-    const connected = await connection.connect();
-    routes.route(app, connected);
-}
-app.use(cors());
-app.use(express.urlencoded({extended: true}));
-app.use(bodyParser.json());
-run(app);
-app.listen(PORT, () => console.log(`API is listening on port ${PORT}`));
+var express = require('express');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+
+var app = express();
+
+app.use(express.static(process.cwd() + '/public'));
+
+app.use(bodyParser.urlencoded({
+	extended: false
+}));
+
+
+app.use(methodOverride('_method'));
+var exphbs = require('express-handlebars');
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main'
+}));
+app.set('view engine', 'handlebars');
+
+var routes = require('./controllers/burgers_controllers');
+app.use('/', routes);
+
+var port = process.env.PORT || 3000;
+app.listen(port);
+console.log("API listening on port " + port)
